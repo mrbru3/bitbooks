@@ -7,20 +7,23 @@ const url = config.get('COIN_RPC_URL')
 
 class CoinService {
   constructor() {
-    this.client = new RPC({ url, port, user, password })
+		// ./bitcoind -testnet -walletnotify="~/./walletnotify.sh" -blocknotify="~/./blocknotify.sh"
+    //the bash scripts will send post requests to our server when they find somethign
+		this.client = new RPC({ url, port, user, password })
   }
 
   async getBalance() {
     return this.client.request('getbalance').then(r => r.result)
   }
-
+	
+	//make the bitcoin daemeon watch this address
   async watchAddress({
     order, address
   }) {
     return this.client.request('importaddress', [address, "order", false])
       .then(r => r.result)
   }
-
+	//for confirming the transaction
   async getTransaction(txid) {
     return this.client.request('gettransaction', [txid, true])
       .then(r => r.result)

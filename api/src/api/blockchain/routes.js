@@ -12,9 +12,9 @@ exports.onWalletUpdate = async function(ctx) {
   ctx.status = 200
 
 }
-
+//receives notifications from the sh scripts
 exports.routes = function(router) {
-  router.post('/blocknotify', this.onBlockUpdate)
-  router.post('/walletnotify', this.onWalletUpdate)
+  router.post('/blocknotify', this.onBlockUpdate) //new block created
+  router.post('/walletnotify', this.onWalletUpdate) //wallet has received funds
   return router
 }

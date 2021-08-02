@@ -44,7 +44,7 @@ const createNewTransaction = async function(txid) {
   const order = await Order.findOne({ paymentAddress: t.address })
 
   if (order) {
-    const room = socket.io.to(`${order._id}`)
+    const room = socket.io.to(`${order._id}`) //send info to the socket (by the orderID)
     if (order.amount <= t.amount) {
       room.emit('update', { state: 'received' } )
     } else {
@@ -52,7 +52,7 @@ const createNewTransaction = async function(txid) {
     }
   }
 }
-
+//when wallet received funds
 exports.onTransaction = async function(txid) {
   const transaction = await Transaction.findOne({ txid })
 
@@ -62,6 +62,7 @@ exports.onTransaction = async function(txid) {
     await checkTransactionConfirmations(transaction)
   }
 }
+//when block update occurs
 exports.onBlock = async function(blockhash) {
   const transactions = await Transaction.find({ status: 'unconfirmed' })
   await Promise.all(transactions.map(checkTransactionConfirmations))

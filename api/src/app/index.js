@@ -10,8 +10,10 @@ const router = require('../routing')
 const errorMiddleware = require('../middleware/error')
 const productList = require('../../../products.json')
 const Product = require('./../api/products/model')
+//our socket
 const socket = require('../socket')
 
+//different weird thing similar to express
 const api = new Koa()
 api.use(require('koa-response-time')())
 api.use(require('koa-morgan')('combined'))
@@ -43,9 +45,10 @@ module.exports = {
       await socket.listen(4000)
       await app.listen(3000)
       console.log('App running on port 3000')
-
+			//our socket
       socket.io.on('connection', async (socket) => {
-        const order = socket.handshake.query.order
+        const order = socket.handshake.query.order //use the order for connecting to the socket
+				//now it can be pinged for updates
         socket.join(order)
         socket.emit('update', {'state': 'waiting'})
       })
